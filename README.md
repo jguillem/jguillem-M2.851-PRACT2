@@ -2,7 +2,7 @@
 
 **Autores:** Jordi Guillem y Xairo Campos  
 **Asignatura:** M2.851 - Tipología y ciclo de vida de los datos  
-**Práctica:** 1 - Web Scraping  
+**Práctica:** 2 - Data Cleaning  
 **Universidad:** UOC  
 **Fecha:** Octubre 2025
 
@@ -10,9 +10,8 @@
 
 ## Descripción
 
-Proyecto de web scraping para extraer posts del subreddit r/datascience de Reddit. El scraper utiliza Selenium para navegar por las páginas, extrae metadatos completos de cada post y realiza análisis de sentimiento automático usando VADER.
+Proyecto para la realización de la limpieza del dataset obtenido en la practiva 1 de la asignatura.
 
-El objetivo es generar un dataset estructurado con información sobre posts de data science, que incluye engagement (karma, comentarios), tipos de contenido, y análisis de sentimiento del título y texto.
 
 ---
 
@@ -21,25 +20,14 @@ El objetivo es generar un dataset estructurado con información sobre posts de d
 ```
 M2.851-PRACT1/
 ├── dataset/
-│   ├── .gitkeep
-│   ├── reddit_datascience_dataset.csv    # Dataset generado por el scraper
-|   └── zenodo                            # Carpeta con el README de zenodo
+│   ├── old_reddit_datascience_dataset.csv    # Dataset generado por el scraper
 |        
 │
 ├── source/
-│   ├── .gitkeep
-│   ├── main.py                           # Script principal - ejecutar desde aquí
-│   ├── config.py                         # Configuración del scraper
-│   ├── reddit_scraper.py                 # Lógica principal del scraping
-│   ├── post_extractor.py                 # Extrae datos individuales de cada post
-│   ├── sentiment_analyzer.py             # Análisis de sentimiento con VADER
 │   ├── analyze_dataset.py                # Script para analizar el dataset generado
-│   └── __pycache__/                      # Archivos compilados de Python
-│
-├── .env.example                          # Ejemplo de configuración de las credenciales
 ├── .git/                                 # Control de versiones
 ├── .gitignore                            # Archivos ignorados por git
-├── M2.851_20251_Practica1.pdf            # Enunciado de la práctica
+├── M2.851_20251_Practica2.pdf            # Enunciado de la práctica
 ├── README.md                             # Este archivo
 └── requirements.txt                      # Dependencias del proyecto
 ```
@@ -50,7 +38,6 @@ M2.851-PRACT1/
 
 ### Requisitos previos
 - Python 3.8 o superior
-- Chrome o Chromium instalado
 - pip (gestor de paquetes de Python)
 
 ### Definición del entorno virutal e Instalar dependencias
@@ -62,11 +49,6 @@ pip install -r requirements.txt
 ```
 
 Esto instalará:
-- **selenium** - Para automatización del navegador
-- **webdriver-manager** - Gestión automática del driver de Chrome
-- **vaderSentiment** - Análisis de sentimiento
-- **pandas** - Procesamiento de datos
-- **python-dateutil** - Manejo de fechas
 
 ---
 
@@ -84,31 +66,10 @@ cd source
 python main.py
 ```
 
-El scraper:
-1. Abrirá Chrome (o en modo headless si está configurado)
-   1. Si el proceso de login funciona correctamente se verá la pantalla de login
-2. Navegará a old.reddit.com/r/datascience
-3. Extraerá posts página por página
-4. Guardará el progreso automáticamente
+El analizador:
+1. Abrirá el dataset
 
-**Para detener el scraper:** Presiona `Ctrl+C` y guardará automáticamente el progreso hasta ese momento.
-
-### 2. Uso con login de usuario
-
-Aunque la aplicación hace el scraping de datos públicos, es posible arrancarla con login de usuario para evitar detecciones
-Solamente funciona con usuario nativo de la plataforma Reddit. No funciona con login de Google o Apple
-
-Pasos:
-
- 1. Renombrar el archivo .env.example a .env 
- 2. Indicar usuario y contraseña de reddit
- 3. Ejecutar el script principal main.py
-
-REDDIT_USER=
-REDDIT_PASS=
-
-
-### 3. Analizar el dataset generado
+### 2. Analizar el dataset generado
 
 Una vez generado el dataset:
 
@@ -130,7 +91,6 @@ Este script mostrará:
 
 ## Configuración
 
-Editar `source/config.py` para personalizar el comportamiento:
 
 ### Parámetros principales:
 
@@ -145,14 +105,6 @@ Editar `source/config.py` para personalizar el comportamiento:
   - `True` = ejecución sin ventana
 - **`VERBOSE`**: Mostrar información detallada durante la ejecución
 - **`OUTPUT_FILE`**: Ruta del archivo CSV de salida
-
-### Ejemplo de configuración para pruebas rápidas:
-
-```python
-MAX_POSTS = 50           # Solo 50 posts
-HEADLESS = True          # Sin ventana
-SCROLL_DELAY = 1         # Más rápido (¡cuidado con saturar el servidor!)
-```
 
 ---
 
@@ -203,9 +155,6 @@ Cada fila del CSV representa un post con los siguientes campos:
 
 ## Tecnologías utilizadas
 
-- **Selenium WebDriver**: Automatización del navegador web
-- **Chrome/Chromium**: Navegador para el scraping
-- **VADER Sentiment**: Análisis de sentimiento optimizado para redes sociales
 - **Pandas**: Procesamiento y análisis de datos
 - **Python 3**: Lenguaje de programación
 
@@ -214,81 +163,12 @@ Cada fila del CSV representa un post con los siguientes campos:
 ## Consideraciones importantes
 
 ### Aspectos éticos y legales:
-- [o] Uso de old.reddit.com que es más ligero y accesible
-- [o] Delays entre peticiones para no saturar los servidores
-- [o] User-Agent identificable con propósito educativo
-- [!] Solo para uso académico/educativo
-- [!] Respetar los términos de servicio de Reddit
-
-### Técnicas anti-detección:
-- User-Agent personalizado identificando propósito educativo
-- Delays aleatorios entre acciones
-- Scroll gradual para simular comportamiento humano
-- Scripts JavaScript para ocultar flags de automatización
-- Espera de carga completa de la página en la versión moderna
 
 ### Limitaciones:
 - El ratio de upvotes no siempre está disponible en el listado
 - Timestamps pueden estar en formato relativo ("2 hours ago")
 - Reddit puede cambiar su estructura HTML en cualquier momento
 - Compatibilidad parcial con reddit moderno
-
----
-
-## Notas adicionales
-
-- El scraper usa **old.reddit.com** por defecto porque:
-  - Es más ligero y rápido
-  - Estructura HTML más simple y estable
-  - Menos JavaScript dinámico
-  - Navegación por páginas más predecible
-
-- **Interrupción segura**: Al presionar `Ctrl+C`, el scraper:
-  1. Captura la señal de interrupción
-  2. Guarda todos los datos extraídos hasta ese momento
-  3. Cierra el navegador correctamente
-  4. Termina sin perder datos
-
-- **Duplicados**: El scraper mantiene un registro de IDs procesados para evitar duplicados en una misma ejecución
-
-- **VADER Sentiment**: Especialmente diseñado para textos cortos de redes sociales, considera:
-  - Emoticonos y emojis
-  - Capitalización (MAYÚSCULAS = énfasis)
-  - Signos de puntuación (!!!)
-  - Palabras de argot
-
----
-
-## Troubleshooting
-
-### Extracción en Reddit Moderno
-- Esta aplicación tiene compatibilidad limitada para el reddit moderno 
-- Los posts se abren en pestañas pero la interrupción del programa con Crl + C genera algunos mensajes de error en modo VERBOSE
-- Por defecto Reddit moderno detecta el idioma de instalación del navegador, aún que en el archivo .config se haya definido el inglés
-- Si se cambia rápidamente la opción de autotraducción el idioma rápidamente en el icono superior derecho
-
-### El navegador no se abre
-- Verificar que Chrome/Chromium está instalado
-- Probar con `HEADLESS = False` en config.py
-
-### "Import selenium could not be resolved"
-```bash
-pip install -r requirements.txt
-```
-
-### El scraper no encuentra posts
-- Reddit puede haber cambiado su estructura HTML
-- Verificar que old.reddit.com está accesible
-- Revisar los selectores en `post_extractor.py`
-
-### Muy lento
-- Reducir `SCROLL_DELAY` en config.py (¡con cuidado!)
-- Usar `HEADLESS = True`
-
-### El dataset está vacío
-- Verificar que el scraper encontró posts durante la ejecución
-- Revisar errores en la consola
-- Comprobar permisos de escritura en la carpeta `dataset/`
 
 ---
 
