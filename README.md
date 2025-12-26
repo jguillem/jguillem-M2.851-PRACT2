@@ -4,7 +4,7 @@
 **Asignatura:** M2.851 - Tipología y ciclo de vida de los datos  
 **Práctica:** 2 - Data Cleaning  
 **Universidad:** UOC  
-**Fecha:** Octubre 2025
+**Fecha:** Diciembre 2025
 
 ---
 
@@ -12,6 +12,7 @@
 
 Proyecto para la realización de la limpieza del dataset obtenido en la practiva 1 de la asignatura.
 
+El dataset contiene los últimos posts del subreddit datascience que tiene como descripción "A space for data science professionals to engage in discussions and debates on the subject of data science." Su análisis puede ser importante por tratarse de un foro conocido y abierto sobre ciencia de datos y podría permitir identificar temas relevantes del área. 
 
 ---
 
@@ -20,9 +21,7 @@ Proyecto para la realización de la limpieza del dataset obtenido en la practiva
 ```
 M2.851-PRACT1/
 ├── dataset/
-│   ├── old_reddit_datascience_dataset.csv    # Dataset generado por el scraper
-|        
-│
+│   ├── reddit_datascience_dataset.csv    # Dataset generado por el scraper       
 ├── source/
 │   ├── analyze_dataset.py                # Script para analizar el dataset generado
 ├── .git/                                 # Control de versiones
