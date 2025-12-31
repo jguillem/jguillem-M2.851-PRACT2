@@ -92,7 +92,7 @@ def analyze_dataset(filepath):
 
 if __name__ == "__main__":
     # ruta por defecto
-    default_path = "../dataset/reddit_datascience_dataset.csv"
+    default_path = "../data/raw/reddit_datascience_dataset.csv"
     
     # permitir especificar ruta como argumento
     filepath = sys.argv[1] if len(sys.argv) > 1 else default_path

@@ -1,16 +1,9 @@
-# Scraper de Reddit - Práctica 1
+# Scraper de Reddit - Práctica 2
 # Autores: Jordi Guillem y Xairo Campos
-# Fecha: Noviembre 2025
-
-# para el scraping web
-selenium
-webdriver-manager
-
-# análisis de sentimiento
-vaderSentiment
+# Fecha: Diciembre 2025
 
 # procesar los datos
 pandas
 
-# utilidades varias
-python-dateutil
+# valores nulos y operaciones matemáticas
+numpy
