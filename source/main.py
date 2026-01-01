@@ -19,7 +19,6 @@ from load_data import load_original_dataset, load_extra_dataset
 from clean_data import clean_basic
 from integrate_data import merge_datasets
 from clean_after_integration import clean_dataset
-from feature_engineering import apply_feature_engineering
 from select_columns import select_final_columns
 from utils import ensure_directory, print_separator, summarize_dataframe
 from config import OUTPUT_DATA_DIR, CLEAN_OUTPUT_FILENAME
@@ -39,6 +38,10 @@ def main():
     print(f"Dataset original: {df_main.shape}")
     print(f"Dataset extra: {df_extra.shape}")
 
+    coinciden = set(df_extra["post_id"]) & set(df_main["post_id"])
+    print("Coincidencias:", len(coinciden))
+
+
     # ---------------------------------------------------------
     # 2. LIMPIEZA BÁSICA
     # ---------------------------------------------------------
@@ -54,11 +57,11 @@ def main():
     df_merged = merge_datasets(df_main, df_extra)
     print(f"Dataset integrado: {df_merged.shape}")
 
-    # Exclusión del subreddit y de otra variable
-    if "subreddit" in df_merged.columns:
-        df_merged = df_merged[df_merged["subreddit"] != "datascience"]
+    print("Filas después del merge:", df_merged.shape[0])
+    print("Coincidencias en post_id:", df_merged["upvote_ratio_new"].notna().sum())
 
-    df_merged = df_merged.drop(columns=["otra_variable"], errors="ignore")
+
+
 
     # ---------------------------------------------------------
     # RESUMEN DEL DATASET TRAS LA INTEGRACIÓN Y FILTRADO
@@ -72,25 +75,18 @@ def main():
 
     df_clean = clean_dataset(df_merged)
     print(f"Dataset limpio: {df_clean.shape}")
+  
 
     # ---------------------------------------------------------
-    # 5. FEATURE ENGINEERING
-    # ---------------------------------------------------------
-    print_separator("5. Feature engineering")
-
-    df_features = apply_feature_engineering(df_clean)
-    print(f"Dataset con features: {df_features.shape}")
-
-    # ---------------------------------------------------------
-    # 6. SELECCIÓN DE COLUMNAS FINALES
+    # 5. SELECCIÓN DE COLUMNAS FINALES
     # ---------------------------------------------------------
     print_separator("6. Selección de columnas finales")
 
-    df_final = select_final_columns(df_features)
+    df_final = select_final_columns(df_clean)
     print(f"Dataset final: {df_final.shape}")
 
     # ---------------------------------------------------------
-    # 7. GUARDADO DEL RESULTADO
+    # 6. GUARDADO DEL RESULTADO
     # ---------------------------------------------------------
     print_separator("7. Guardando dataset final")
 

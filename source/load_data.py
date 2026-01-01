@@ -25,7 +25,10 @@ def load_original_dataset():
         DataFrame con los datos originales.
     """
     try:
-        df = pd.read_csv(ORIGINAL_DATASET_PATH)
+        df = pd.read_csv(
+            ORIGINAL_DATASET_PATH,
+            dtype={"post_id": "string"}
+            )
         print(f"[OK] Dataset original cargado desde: {ORIGINAL_DATASET_PATH}")
         return df
     except FileNotFoundError:
@@ -44,7 +47,10 @@ def load_extra_dataset():
         DataFrame con los datos adicionales.
     """
     try:
-        df = pd.read_csv(EXTRA_DATASET_PATH)
+        df = pd.read_csv(
+            EXTRA_DATASET_PATH,
+            dtype={"post_id": "string"}
+            )
         print(f"[OK] Dataset extra cargado desde: {EXTRA_DATASET_PATH}")
         return df
     except FileNotFoundError:
