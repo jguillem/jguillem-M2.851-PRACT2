@@ -1,18 +1,10 @@
 """
-load_data.py
----------------------------------------
-Módulo encargado de cargar los datasets
-originales desde la carpeta raw/.
-
-Utiliza las rutas definidas en config.py
-para mantener el código limpio y centralizado.
+Modulo para la carga de los diferentes datasets
+Autores: Jordi Guillem y Xairo Campos
 """
 
 import pandas as pd
-from config import (
-    ORIGINAL_DATASET_PATH,
-    EXTRA_DATASET_PATH
-)
+from config import Config   
 
 
 def load_original_dataset():
@@ -26,13 +18,13 @@ def load_original_dataset():
     """
     try:
         df = pd.read_csv(
-            ORIGINAL_DATASET_PATH,
+            Config.ORIGINAL_DATASET_PATH,
             dtype={"post_id": "string"}
-            )
-        print(f"[OK] Dataset original cargado desde: {ORIGINAL_DATASET_PATH}")
+        )
+        print(f"[OK] Dataset original cargado desde: {Config.ORIGINAL_DATASET_PATH}")
         return df
     except FileNotFoundError:
-        print(f"[ERROR] No se encontró el archivo: {ORIGINAL_DATASET_PATH}")
+        print(f"[ERROR] No se encontró el archivo: {Config.ORIGINAL_DATASET_PATH}")
         raise
 
 
@@ -48,13 +40,13 @@ def load_extra_dataset():
     """
     try:
         df = pd.read_csv(
-            EXTRA_DATASET_PATH,
+            Config.EXTRA_DATASET_PATH,
             dtype={"post_id": "string"}
-            )
-        print(f"[OK] Dataset extra cargado desde: {EXTRA_DATASET_PATH}")
+        )
+        print(f"[OK] Dataset extra cargado desde: {Config.EXTRA_DATASET_PATH}")
         return df
     except FileNotFoundError:
-        print(f"[ERROR] No se encontró el archivo: {EXTRA_DATASET_PATH}")
+        print(f"[ERROR] No se encontró el archivo: {Config.EXTRA_DATASET_PATH}")
         raise
 
 

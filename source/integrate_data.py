@@ -1,9 +1,6 @@
 """
-integrate_data.py
----------------------------------------
-Módulo encargado de integrar el dataset
-principal con el dataset extra que contiene
-el nuevo campo upvote_ratio_new.
+Modulo para la integración de los diferentes datasets
+Autores: Jordi Guillem y Xairo Campos
 """
 
 import pandas as pd

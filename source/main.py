@@ -1,28 +1,19 @@
 """
-main.py
----------------------------------------
-Pipeline completo de procesamiento de datos:
-
-1. Carga de datasets
-2. Limpieza básica
-3. Integración de datasets
-4. Resumen del dataset integrado
-5. Limpieza avanzada
-6. Feature engineering
-7. Selección de columnas finales
-8. Guardado del dataset procesado
-"""
+Script principal
+Autores: Jordi Guillem y Xairo Campos
+UOC - M2.851 - Tipología y ciclo de vida de los datos
+Práctica 2 - Limpieza de datos
+Diciembre 2025
+""" 
 
 import pandas as pd
 
 from load_data import load_original_dataset, load_extra_dataset
-from clean_data import clean_basic
 from integrate_data import merge_datasets
 from clean_after_integration import clean_dataset
 from select_columns import select_final_columns
-from utils import ensure_directory, print_separator, summarize_dataframe
-from config import OUTPUT_DATA_DIR, CLEAN_OUTPUT_FILENAME
-
+from utils import clean_basic, ensure_directory, print_separator, summarize_dataframe
+from config import Config  
 
 def main():
     print_separator("INICIANDO PIPELINE DE PROCESAMIENTO DE DATOS")
@@ -40,7 +31,6 @@ def main():
 
     coinciden = set(df_extra["post_id"]) & set(df_main["post_id"])
     print("Coincidencias:", len(coinciden))
-
 
     # ---------------------------------------------------------
     # 2. LIMPIEZA BÁSICA
@@ -60,9 +50,6 @@ def main():
     print("Filas después del merge:", df_merged.shape[0])
     print("Coincidencias en post_id:", df_merged["upvote_ratio_new"].notna().sum())
 
-
-
-
     # ---------------------------------------------------------
     # RESUMEN DEL DATASET TRAS LA INTEGRACIÓN Y FILTRADO
     # ---------------------------------------------------------
@@ -75,7 +62,6 @@ def main():
 
     df_clean = clean_dataset(df_merged)
     print(f"Dataset limpio: {df_clean.shape}")
-  
 
     # ---------------------------------------------------------
     # 5. SELECCIÓN DE COLUMNAS FINALES
@@ -90,13 +76,20 @@ def main():
     # ---------------------------------------------------------
     print_separator("7. Guardando dataset final")
 
-    ensure_directory(OUTPUT_DATA_DIR)
+    ensure_directory(Config.OUTPUT_DATA_DIR)
 
-    output_path = f"{OUTPUT_DATA_DIR}/{CLEAN_OUTPUT_FILENAME}"
+    output_path = Config.CLEAN_OUTPUT_PATH
     df_final.to_csv(output_path, index=False)
 
     print(f"Archivo guardado en: {output_path}")
     print_separator("PIPELINE COMPLETADO")
+
+    print("Duplicados en df_main:", df_main["post_id"].duplicated().sum())
+    print("Duplicados en df_extra:", df_extra["post_id"].duplicated().sum())
+    print("Duplicados en df_final:", df_final["post_id"].duplicated().sum())
+
+
+
 
 
 if __name__ == "__main__":

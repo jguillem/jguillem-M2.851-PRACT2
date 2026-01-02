@@ -1,11 +1,6 @@
 """
-select_columns.py
----------------------------------------
-Módulo encargado de seleccionar las columnas
-finales del dataset tras la integración.
-
-En esta fase se eliminan columnas que no se
-desean conservar en el dataset final.
+Modulo para la selección de los campos
+Autores: Jordi Guillem y Xairo Campos
 """
 
 def select_final_columns(df):

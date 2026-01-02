@@ -1,13 +1,10 @@
 """
-utils.py
----------------------------------------
-Funciones auxiliares utilizadas en distintos
-módulos del proyecto. Incluye validaciones,
-comprobaciones y utilidades generales.
+Funciones auxiliares
+Autores: Jordi Guillem y Xairo Campos
 """
 
 import os
-
+import pandas as pd
 
 def check_columns(df, required_columns):
     """
@@ -101,3 +98,56 @@ def summarize_dataframe(df, title="RESUMEN DEL DATASET"):
     print("\nRangos de valores por variable numérica:")
     for col in df.select_dtypes(include=["int64", "float64"]):
         print(f"{col}: min={df[col].min()}, max={df[col].max()}")
+
+
+def clean_basic(df):
+    """
+    Realiza una limpieza básica del dataset:
+    - Elimina duplicados
+    - Limpia espacios en columnas string
+    - Normaliza tipos de datos comunes
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Dataset original cargado desde raw/
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataset limpio y preparado para integración
+    """
+
+    df = df.copy()
+
+    # -----------------------------------------
+    # 1. Eliminar duplicados
+    # -----------------------------------------
+    before = len(df)
+    df = df.drop_duplicates()
+    after = len(df)
+    print(f"[OK] Duplicados eliminados: {before - after}")
+
+    # -----------------------------------------
+    # 2. Limpiar espacios en columnas string
+    # -----------------------------------------
+    str_cols = df.select_dtypes(include=["object"]).columns
+    for col in str_cols:
+        df[col] = df[col].astype(str).str.strip()
+
+    print("[OK] Espacios en columnas string limpiados")
+
+    # -----------------------------------------
+    # 3. Convertir fechas si existen
+    # -----------------------------------------
+    if "posted_time" in df.columns:
+        df["posted_time"] = pd.to_datetime(df["posted_time"], errors="coerce")
+        print("[OK] Columna 'posted_time' convertida a datetime")
+
+    # -----------------------------------------
+    # 4. Manejo básico de valores nulos
+    # -----------------------------------------
+    nulls = df.isna().sum().sum()
+    print(f"[INFO] Valores nulos totales: {nulls}")
+
+    return df
