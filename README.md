@@ -181,9 +181,6 @@ Cada fila del CSV representa un post con los siguientes campos:
 ### Limitaciones:
 - El ratio de upvotes no siempre está disponible en el listado
 - Timestamps pueden estar en formato relativo ("2 hours ago")
-- Reddit puede cambiar su estructura HTML en cualquier momento
-- Compatibilidad parcial con reddit moderno
-
 ---
 
 ## Contacto
@@ -191,5 +188,5 @@ Cada fila del CSV representa un post con los siguientes campos:
 **Jordi Guillem** | **Xairo Campos**  
 Universidad Oberta de Catalunya (UOC)  
 M2.851 - Tipología y ciclo de vida de los datos  
-Práctica 1 - Web Scraping  
-Octubre 2025
+Práctica 2 - Data Cleaning
+Diciembre 2025
