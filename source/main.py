@@ -66,7 +66,7 @@ def main():
     # ---------------------------------------------------------
     # 5. SELECCIÓN DE COLUMNAS FINALES
     # ---------------------------------------------------------
-    print_separator("6. Selección de columnas finales")
+    print_separator("5. Selección de columnas finales")
 
     df_final = select_final_columns(df_clean)
     print(f"Dataset final: {df_final.shape}")
@@ -74,7 +74,7 @@ def main():
     # ---------------------------------------------------------
     # 6. GUARDADO DEL RESULTADO
     # ---------------------------------------------------------
-    print_separator("7. Guardando dataset final")
+    print_separator("6. Guardando dataset limpio")
 
     ensure_directory(Config.OUTPUT_DATA_DIR)
 
