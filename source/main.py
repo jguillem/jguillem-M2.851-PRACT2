@@ -7,13 +7,14 @@ Diciembre 2025
 """ 
 
 import pandas as pd
-
+from utils import clean_basic, ensure_directory, print_separator, summarize_dataframe
+from config import Config  
 from load_data import load_original_dataset, load_extra_dataset
 from integrate_data import merge_datasets
 from clean_after_integration import clean_dataset
 from select_columns import select_final_columns
-from utils import clean_basic, ensure_directory, print_separator, summarize_dataframe
-from config import Config  
+from outliers import detect_outliers_iqr, mark_outliers, plot_outliers
+
 
 def main():
     print_separator("INICIANDO PIPELINE DE PROCESAMIENTO DE DATOS")
@@ -62,6 +63,25 @@ def main():
 
     df_clean = clean_dataset(df_merged)
     print(f"Dataset limpio: {df_clean.shape}")
+
+    # ---------------------------------------------------------
+    # 4B. DETECCIÓN DE OUTLIERS (IQR)
+    # ---------------------------------------------------------
+    print_separator("4B. Detección de outliers (IQR)")
+
+    outliers = detect_outliers_iqr(df_clean)
+    print("\nCantidad de outliers por atributo:")
+    for col, info in outliers.items():
+        print(f" - {col}: {len(info['outliers'])}")
+
+
+
+    # Añadir columnas marcando outliers
+    df_clean = mark_outliers(df_clean)
+
+    # Mostrar plots por pantalla
+    plot_outliers(df_clean)
+
 
     # ---------------------------------------------------------
     # 5. SELECCIÓN DE COLUMNAS FINALES

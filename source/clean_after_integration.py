@@ -145,3 +145,4 @@ def clean_dataset(df):
             df[col] = pd.to_datetime(df[col], errors="coerce")
 
     return df
+

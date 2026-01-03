@@ -75,7 +75,13 @@ python main.py
 
 Saldrá por el prompt de comandos los diferentes pasos del pipeline del proyecto:
 
-- Carga de los datasets presentes en data/raw
+1. Cargando datasets
+2. Limpieza básica del dataset original
+3. Integrando datasets
+RESUMEN TRAS INTEGRACIÓN Y FILTRADO
+4. Limpieza avanzada
+5. Selección de columnas finales
+6. Guardando dataset limpio
 
 ### 2. Analizar el dataset generado
 
@@ -102,68 +108,36 @@ Este script mostrará:
 
 ### Parámetros principales:
 
-- **`SUBREDDIT`**: Subreddit a scrapear (por defecto: "datascience")
-- **`USE_OLD_REDDIT`**: True para usar old.reddit.com (recomendado)
-- **`MAX_POSTS`**: Límite de posts a extraer
-  - `None` = sin límite (extrae todo lo disponible)
-  - Número entero = límite específico
-- **`SCROLL_DELAY`**: Segundos entre cada scroll/navegación (por defecto: 2)
-- **`HEADLESS`**: 
-  - `False` = muestra el navegador (útil para ver el progreso)
-  - `True` = ejecución sin ventana
-- **`VERBOSE`**: Mostrar información detallada durante la ejecución
 - **`OUTPUT_FILE`**: Ruta del archivo CSV de salida
-
-
 - **`ORIGINAL_DATASET`**: Nombre del archivo csv del dataset principal 
 - **`EXTRA_DATASET`**: Nombre del archivo csv del dataset con datos adicionales
 - **`CLEAN_OUTPUT_FILENAME`**: Nombre del archivo csv de los datos limpios del pipeline
-
 ---
 
-## Datos extraídos
+## Resumen de las consideraciones de limpieza
 
-Cada fila del CSV representa un post con los siguientes campos:
-
-### Metadatos básicos:
-- **`post_id`**: ID único del post en Reddit
-- **`title`**: Título del post
-- **`author`**: Nombre de usuario del autor
-- **`subreddit`**: Subreddit de origen (siempre "datascience" en este caso)
-- **`permalink`**: URL del post
-
-### Engagement:
-- **`karma`**: Puntos del post (upvotes - downvotes)
-- **`upvote_ratio`**: Porcentaje de upvotes (0-100)
-- **`num_comments`**: Número de comentarios
-
-### Clasificación:
-- **`flair`**: Etiqueta/categoría del post (si tiene)
-- **`content_type`**: Tipo de contenido:
-  - `text` - Post de texto
-  - `image` - Contiene imagen
-  - `video` - Contiene video
-  - `link` - Link a sitio externo
-
-### Contenido:
-- **`text_content`**: Texto del post (primeros 500 caracteres)
-- **`media_url`**: URL de imagen/video (si aplica)
-- **`external_url`**: URL externa (si aplica)
-
-### Temporal:
-- **`posted_time`**: Fecha y hora de publicación
-- **`posted_hour`**: Hora del día (0-23)
-- **`scraped_at`**: Timestamp de cuando se extrajo
-
-### Análisis de sentimiento (VADER):
-- **`sentiment`**: Clasificación categórica
-  - `positive` - Sentimiento positivo
-  - `negative` - Sentimiento negativo
-  - `neutral` - Sentimiento neutral
-- **`sentiment_score`**: Score compuesto (-1 a 1)
-- **`sentiment_positive`**: Score positivo (0-1)
-- **`sentiment_negative`**: Score negativo (0-1)
-- **`sentiment_neutral`**: Score neutral (0-1)
+| Campo              | Imputación                                   | Resumen                                           |
+|--------------------|-----------------------------------------------|---------------------------------------------------|
+| title              | "untitled"                                    | Título desconocido o vacío                        |
+| author             | "unknown"                                     | Autor no disponible                               |
+| karma              | Media redondeada                              | Mantiene distribución original                    |
+| upvote_ratio_new   | Media redondeada                              | Evita sesgos por valores faltantes                |
+| num_comments       | 0                                             | Sin comentarios registrados                       |
+| flair              | "no flair"                                    | Publicación sin etiqueta                          |
+| content_type       | "text" si hay contenido, si no "unknown"      | Inferido a partir de text_content                 |
+| text_content       | "no content"                                  | No hay texto disponible                           |
+| media_url          | "no media url"                                | No contiene medios                                |
+| external_url       | "no external url"                             | No enlaza a recursos externos                     |
+| posted_time        | 1970-01-01                                    | Fecha técnica para evitar NaT                     |
+| posted_hour        | -1                                            | Hora desconocida                                  |
+| sentiment          | "neutral"                                     | Valor por defecto                                 |
+| sentiment_score    | 0                                             | Sentimiento neutral                               |
+| sentiment_positive | 0                                             | Normalización posterior                           |
+| sentiment_negative | 0                                             | Normalización posterior                           |
+| sentiment_neutral  | 1                                             | Normalización posterior                           |
+| scraped_at         | 1970-01-01                                    | Fecha técnica si falta                            |
+| post_id            | "no post id"                                  | Identificador ausente                             |
+| permalink          | URL generada                                  | https://old.reddit.com/r/datascience/<post_id_sin_prefijo> |)
 
 ---
 
@@ -174,14 +148,6 @@ Cada fila del CSV representa un post con los siguientes campos:
 
 ---
 
-## Consideraciones importantes
-
-### Aspectos éticos y legales:
-
-### Limitaciones:
-- El ratio de upvotes no siempre está disponible en el listado
-- Timestamps pueden estar en formato relativo ("2 hours ago")
----
 
 ## Contacto
 
