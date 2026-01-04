@@ -10,3 +10,8 @@ numpy
 
 # matplotlib para el cálculo de outliers
 matplotlib
+
+# modelado y estadística (notebook de análisis)
+scikit-learn
+scipy
+seaborn

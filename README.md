@@ -10,9 +10,13 @@
 
 ## Descripción
 
-Proyecto para la realización de la limpieza del dataset obtenido en la practiva 1 de la asignatura.
+Proyecto completo de análisis de datos sobre posts del subreddit r/datascience. El proyecto incluye:
 
-El dataset contiene los últimos posts del subreddit datascience que tiene como descripción "A space for data science professionals to engage in discussions and debates on the subject of data science." Su análisis puede ser importante por tratarse de un foro conocido y abierto sobre ciencia de datos y podría permitir identificar temas relevantes del área. 
+1. **Práctica 1:** Web scraping de posts del subreddit
+2. **Práctica 2:** Limpieza, integración y preparación de datos
+3. **Análisis avanzado:** Modelado supervisado, no supervisado y contraste de hipótesis
+
+El dataset contiene posts del subreddit r/datascience: "A space for data science professionals to engage in discussions and debates on the subject of data science." El análisis identifica patrones de engagement, características de posts exitosos y clusters temáticos. 
 
 ---
 
@@ -23,21 +27,24 @@ M2.851-PRACT2/
 ├── data
 │   ├── processed
 │   ├── raw
-│   │   ├── reddit_datascience_dataset.csv      # Dataset principal
+│   │   ├── reddit_datascience_dataset.csv      # Dataset principal (960 posts)
 │   │   ├── reddit_datascience_extradata.csv    # Dataset con datos de upvote y permalink
 ├── output
-│   ├── reddit_datascience_clean.csv            # Dataset con la vase de limpieza aplicada
+│   ├── reddit_datascience_clean.csv            # Dataset limpio y procesado (960 posts × 24 vars)
 ├── source
 │   ├── analyze_dataset.py                      # Script para analizar el dataset generado
 │   ├── clean_after_integration.py              # Módulo para la imputación de datos faltantes y tipificación
 │   ├── config.py                               # Configuración del pipeline de limpieza y análisis
-│   ├── integrate_data.py                       # Modulo para la integración de los diferentes datasets
-│   ├── load_data.py                            # Modulo para la carga de los diferentes datasets
-│   ├── main.py                                 # Script principal
-│   ├── select_columns.py                       # Modulo para la selección de los campos
+│   ├── integrate_data.py                       # Módulo para la integración de los diferentes datasets
+│   ├── load_data.py                            # Módulo para la carga de los diferentes datasets
+│   ├── main.py                                 # Script principal de limpieza
+│   ├── outliers.py                             # Detección y marcado de outliers (IQR)
+│   ├── select_columns.py                       # Módulo para la selección de los campos
 │   ├── utils.py                                # Funciones auxiliares
+├── analisis_reddit_datascience.ipynb           # 📊 NOTEBOOK DE ANÁLISIS COMPLETO
 ├── .gitignore
 ├── M2.851_20251_Práctica2.pdf                  # Enunciado de la práctica
+├── memoria.txt                                 # Enlace a Google Drive con documentación adicional
 ├── README.md                                   # Este archivo
 ├── requirements.txt                            # Dependencias del proyecto
 
@@ -59,8 +66,12 @@ pip install -r requirements.txt
 
 Esto instalará las librerías:
 
-- pandas
-- numpy
+- **pandas**: Manipulación y análisis de datos
+- **numpy**: Computación numérica
+- **matplotlib**: Visualización de datos (gráficos)
+- **seaborn**: Visualización estadística avanzada
+- **scikit-learn**: Machine learning (Random Forest, K-Means, PCA, métricas)
+- **scipy**: Tests estadísticos (Shapiro-Wilk, Levene, t-test, Mann-Whitney)
 
 ## Uso
 
@@ -100,6 +111,62 @@ Este script mostrará:
 - Autores más activos
 - Flairs más comunes
 - Top posts con más engagement
+
+### 3. Ejecutar el notebook de análisis completo
+
+El archivo **`analisis_reddit_datascience.ipynb`** contiene el análisis completo del proyecto:
+
+**Contenido del notebook:**
+
+1. **Descripción del Dataset:** Contexto, variables y motivación del estudio
+2. **Integración y Selección:** Resumen del proceso de preparación de datos
+3. **Limpieza de Datos:** Verificación de imputación, tipificación y gestión de outliers
+4. **Análisis de Datos:**
+   - **Modelo Supervisado (Random Forest):** Clasificación de posts de alto engagement
+   - **Modelo No Supervisado (K-Means):** Clustering de posts por características
+   - **Contraste de Hipótesis:** Test estadístico sobre sentimiento vs engagement
+5. **Visualizaciones:** Gráficos de distribuciones, correlaciones, ROC, clusters, etc.
+6. **Conclusiones:** Interpretación de resultados y resolución del problema
+
+**Para ejecutar el notebook:**
+
+```bash
+# Instalar Jupyter si no lo tienes
+pip install jupyter
+
+# Lanzar Jupyter Notebook
+jupyter notebook analisis_reddit_datascience.ipynb
+```
+
+O abrir directamente el archivo `.ipynb` en **VS Code** con la extensión de Jupyter instalada.
+
+**Características destacadas del análisis:**
+- ✅ Modelos de machine learning supervisado y no supervisado
+- ✅ Verificación de supuestos estadísticos (normalidad, homocedasticidad)
+- ✅ Visualizaciones profesionales con matplotlib y seaborn
+- ✅ Interpretaciones detalladas de cada resultado
+- ✅ Código ejecutable y reproducible
+
+**Resultados principales obtenidos:**
+
+📊 **Modelo Supervisado (Random Forest):**
+- Accuracy: 91.67%
+- ROC-AUC: 0.9816
+- Top predictor: número de comentarios (44.28% importancia)
+- Segundo predictor: upvote ratio (39.20% importancia)
+
+🔍 **Modelo No Supervisado (K-Means):**
+- 4 clusters identificados
+- Cluster 0: Posts de bajo engagement controversial (138 posts)
+- Cluster 1: Posts estándar positivos (507 posts)
+- Cluster 2: Posts con sentimiento negativo/neutral (287 posts)
+- Cluster 3: Posts virales (28 posts, karma promedio: 1429.71)
+
+📈 **Contraste de Hipótesis (Mann-Whitney U):**
+- p-value: 0.017779 (< 0.05)
+- Decisión: Se rechaza H₀
+- Conclusión: Existe diferencia estadísticamente significativa en el karma entre posts positivos y no-positivos
+- Tamaño del efecto: -0.1636 (efecto pequeño)
 
 ---
 
@@ -143,8 +210,13 @@ Este script mostrará:
 
 ## Tecnologías utilizadas
 
+- **Python 3.8+**: Lenguaje de programación
 - **Pandas**: Procesamiento y análisis de datos
-- **Python 3**: Lenguaje de programación
+- **NumPy**: Computación numérica
+- **Matplotlib & Seaborn**: Visualización de datos
+- **Scikit-learn**: Machine learning (Random Forest, K-Means, métricas)
+- **SciPy**: Tests estadísticos (Shapiro-Wilk, Levene, t-test, Mann-Whitney)
+- **Jupyter Notebook**: Análisis interactivo y documentación
 
 ---
 
